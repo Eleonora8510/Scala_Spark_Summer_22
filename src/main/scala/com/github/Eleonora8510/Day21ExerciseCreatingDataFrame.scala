@@ -30,7 +30,6 @@ object Day21ExerciseCreatingDataFrame extends App {
     Row("Pizza vegan", 1, 8L, true)
   )
 
-  //println(myFoodDataFrameSchema)
   val myRDD = spark.sparkContext.parallelize(myFoodRows)
   val foodFrame = spark.createDataFrame(myRDD, myFoodDataFrameSchema)
   foodFrame.show()
