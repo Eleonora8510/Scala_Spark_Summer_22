@@ -2,7 +2,7 @@ package com.github.Eleonora8510
 
 
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.types.{BooleanType, IntegerType, LongType, StringType, StructField, StructType}
+import org.apache.spark.sql.types.{BooleanType, DoubleType, IntegerType, LongType, StringType, StructField, StructType}
 
 object Day21ExerciseCreatingDataFrame extends App {
 
@@ -22,12 +22,12 @@ object Day21ExerciseCreatingDataFrame extends App {
   val myFoodDataFrameSchema = new StructType(Array(
     StructField("FoodName", StringType, false),
     StructField("Quantity", IntegerType, false),
-    StructField("Price", LongType, false),
+    StructField("Price", DoubleType, false),
     StructField("isVegan", BooleanType, true)))
 
-  val myFoodRows = Seq(Row("Cepelinas", 2, 9L, false),
-    Row("Caesar salad ", 1, 7L, false),
-    Row("Pizza vegan", 1, 8L, true)
+  val myFoodRows = Seq(Row("Cepelinas", 2, 9.5, false),
+    Row("Caesar salad ", 1, 7.3, false),
+    Row("Pizza vegan", 1, 8.99, true)
   )
 
   val myRDD = spark.sparkContext.parallelize(myFoodRows)
