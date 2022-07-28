@@ -46,7 +46,7 @@ object Day22FilterSplitExercise extends App {
     for ((dFrame, i) <- dFrames.zipWithIndex) {
       val percentage = dFrame.count() * 100 / df.count()
       val rowCount = dFrame.count()
-      statsBuffer += DFStats(i, rowCount, percentage)
+      statsBuffer += DFStats(i+1, rowCount, percentage)
     }
     statsBuffer
   }
