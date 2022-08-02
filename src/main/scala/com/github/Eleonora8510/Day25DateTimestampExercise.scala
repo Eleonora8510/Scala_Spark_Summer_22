@@ -30,8 +30,8 @@ println("Let's create some new columns with dates and timestamps in Spark")
       |SELECT *,
       |current_date,
       |current_timestamp,
-      |datediff('2022-08-02', '2011-03-01') as day_difference,
-      |months_between('2022-08-02', '2011-03-01') as month_difference
+      |datediff(current_date, InvoiceDate) as day_difference,
+      |months_between(current_date, InvoiceDate) as month_difference
       |FROM dfTable
       |""".stripMargin)
     .show(3, false)
