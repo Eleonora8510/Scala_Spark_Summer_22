@@ -24,8 +24,7 @@ object Day27ExerciseUdf extends App {
 
   temperaturesDF
     .withColumn("temperatureC", tempFtoC(col("temperatureF")))
-    .where(expr("temperatureF >= 90"))
-    .where(expr("temperatureF <= 110"))
+    .where(expr("temperatureF >= 90 AND temperatureF <= 110"))
     .show(21)
 
   // In SQL
