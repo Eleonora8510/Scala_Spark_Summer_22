@@ -10,7 +10,6 @@ object Day29ExerciseWindowFunctions extends App {
   val spark = getSpark("Sparky")
 
   val filePath = "src/resources/retail-data/all/*.csv"
-  //val filePath = "src/resources/retail-data/by-day/2010-12-01.csv"
 
   val df = readDataWithView(spark, filePath)
 
