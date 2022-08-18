@@ -29,7 +29,7 @@ object Day29ExerciseWindowFunctions extends App {
 
   val windowSpec = Window
     .partitionBy("StockCode", "date")
-    .orderBy(col("UnitPrice"))
+    .orderBy(col("UnitPrice").desc)
     .rowsBetween(Window.unboundedPreceding, Window.currentRow)
 
   val maxPrice = max(col("UnitPrice")).over(windowSpec)
@@ -70,12 +70,12 @@ object Day29ExerciseWindowFunctions extends App {
       |ORDER BY StockCode DESC, UnitPrice DESC NULLS LAST
       |ROWS BETWEEN
       |UNBOUNDED PRECEDING AND
-      |CURRENT ROW) as maxPrice,
+      |UNBOUNDED FOLLOWING) as maxPrice,
       |min(UnitPrice) OVER (PARTITION BY StockCode, date
       |ORDER BY StockCode DESC, UnitPrice DESC NULLS LAST
       |ROWS BETWEEN
       |UNBOUNDED PRECEDING AND
-      |CURRENT ROW) as minPrice
+      |Unbounded FOLLOWING) as minPrice
       |FROM dfWithDateView WHERE StockCode IS NOT NULL
       |ORDER BY StockCode DESC, UnitPrice DESC
       |""".stripMargin)

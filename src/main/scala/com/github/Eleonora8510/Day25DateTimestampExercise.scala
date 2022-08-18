@@ -1,6 +1,6 @@
 package com.github.Eleonora8510
 
-import com.github.Eleonora8510.SparkUtil.{getSpark, readCSVWithView}
+import com.github.Eleonora8510.SparkUtil.{getSpark, readDataWithView}
 import org.apache.spark.sql.functions.{col, current_date, current_timestamp, datediff, months_between}
 
 object Day25DateTimestampExercise extends App {
@@ -10,7 +10,7 @@ println("Let's create some new columns with dates and timestamps in Spark")
 
   val filePath = "src/resources/retail-data/by-day/2011-03-01.csv"
 
-  val df = readCSVWithView(spark, filePath)
+  val df = readDataWithView(spark, filePath)
 
   //TODO open March 1st , 2011
   //Add new column with current date

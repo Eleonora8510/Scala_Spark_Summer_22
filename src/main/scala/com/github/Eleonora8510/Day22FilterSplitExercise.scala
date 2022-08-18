@@ -27,31 +27,53 @@ object Day22FilterSplitExercise extends App {
     .where(col("count") > 10)
     .show()
 
+//  df.where("ORIGIN_COUNTRY_NAME = 'United States'")
+//    .where("count > 10")
+//    .show()
+
+
   //TODO Task 2 - I want a random sample from all 2014 of roughly 30 percent, you can use a fixed seed
   //subtask I want to see the actual row count
   val seed = 42
   val withReplacement = false
   val fraction = 0.3
+  df.cache() //so we will try to cache values
   val dfSample = df.sample(withReplacement, fraction, seed)
+  val dfRepartition = df.repartition(1, col("count")) //single partition DF
+
   println(s"Actual $fraction sample has ${dfSample.count()} rows \n")
 
   //TODO Task 3 - I want a split of full 2014 dataframe into 3 Dataframes with the following proportions 2,9, 5
 
-  val dataFrames = df.randomSplit(Array(2, 9, 5), seed)
+//  val dataFrames = df.randomSplit(Array(2, 9, 5), seed)
+//
+//  //subtask I want to see the row count for these dataframes and percentages
+//
+//  def getDataFrameStats(dFrames:Array[Dataset[Row]], df:DataFrame): ArrayBuffer[DFStats] = {
+//    val statsBuffer = new ArrayBuffer[DFStats]
+//    for ((dFrame, i) <- dFrames.zipWithIndex) {
+//      val percentage = dFrame.count() * 100 / df.count()
+//      val rowCount = dFrame.count()
+//      statsBuffer += DFStats(i+1, rowCount, percentage)
+//    }
+//    statsBuffer
+//  }
+//
+//  getDataFrameStats(dataFrames, df)
+//    .foreach(u => println(s"DataFrame No. ${u.number}: ${u.rowCount} rows <==> ${u.percentage} % "))
 
+  val dataFrames = df.randomSplit(Array(2,9,5), seed)
+
+  def getDataFrameStats(dFrames:Array[Dataset[Row]], df:DataFrame): Array[Long] = {
+    dFrames.map(d => d.count() * 100 / df.count())
+  }
+  println("Percentages for 2/5/9 split")
+  println(s"Expected ${2.0*100/16} / ${5.0*100/16} / ${9.0*100/16}")
+  getDataFrameStats(dataFrames, df).foreach(println)
   //subtask I want to see the row count for these dataframes and percentages
 
-  def getDataFrameStats(dFrames:Array[Dataset[Row]], df:DataFrame): ArrayBuffer[DFStats] = {
-    val statsBuffer = new ArrayBuffer[DFStats]
-    for ((dFrame, i) <- dFrames.zipWithIndex) {
-      val percentage = dFrame.count() * 100 / df.count()
-      val rowCount = dFrame.count()
-      statsBuffer += DFStats(i+1, rowCount, percentage)
-    }
-    statsBuffer
+  for ((dFrame, i) <- dataFrames.zipWithIndex) {
+    println(s"$i dataframe consists of ${dFrame.count} rows")
   }
-
-  getDataFrameStats(dataFrames, df)
-    .foreach(u => println(s"DataFrame No. ${u.number}: ${u.rowCount} rows <==> ${u.percentage} % "))
 
 }

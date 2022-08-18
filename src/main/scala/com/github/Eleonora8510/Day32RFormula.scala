@@ -8,6 +8,7 @@ object Day32RFormula extends App {
   //https://spark.apache.org/docs/latest/ml-features.html#rformula
 
   val spark = getSpark("sparky")
+  spark.sparkContext.setLogLevel("WARN")
 
   val dataset = spark.createDataFrame(Seq(
     (7, "US", 18, 1.0),
@@ -38,7 +39,7 @@ object Day32RFormula extends App {
   val formulaDec1 = new RFormula()
     .setFormula("Country ~ UnitPrice + Quantity")
     .setFeaturesCol("Features")
-    .setLabelCol("Label")
+    //.setLabelCol("Label")
 
   //TODO make sure they are numeric columns - we do not want one hot encoding here
   //you can leave column names at default
@@ -46,18 +47,19 @@ object Day32RFormula extends App {
   //create output dataframe with the the formula performing fit and transform
 
   val outputDec1 = formulaDec1.fit(dfDec1).transform(dfDec1)
-    .select( "Country", "UnitPrice", "Quantity","Features", "Label")
+    .select( "Country", "UnitPrice", "Quantity","Features", "label")
     .show()
 
   //TODO BONUS try creating features from ALL columns in the Dec1st CSV except of course Country (using . syntax)
   //This should generate very sparse column of features because of one hot encoding
   val formulaFull = new RFormula()
-    .setFormula("Country ~ .")
-    .setFeaturesCol("MyFeatures")
-    .setLabelCol("MyLabel")
+    .setFormula("Country ~ .") //this will create one hot encoding for all string columns
+    //.setFeaturesCol("MyFeatures")
+    //.setLabelCol("MyLabel") //now default Label "label"
 
   val outputFull = formulaFull.fit(dfDec1).transform(dfDec1)
-    .select()
+
+  outputFull
     .show(false)
 
 }

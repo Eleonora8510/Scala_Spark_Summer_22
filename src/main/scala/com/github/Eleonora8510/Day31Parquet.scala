@@ -48,11 +48,25 @@ object Day31Parquet extends App {
   //TODO show some basic statistics - describe would be a good start
   //TODO if you encounter warning reading data THEN save into src/resources/regression_fixed
 
-  val dfParquet = spark.read.format("parquet")
+  val dfParquet = spark.read
     .load("src/resources/regression")
 
-  df.show(5)
-  df.describe().show()
-  df.printSchema()
+  dfParquet.show(5)
+  dfParquet.describe().show()
+  dfParquet.printSchema()
+
+  val dfSchema = dfParquet.schema
+  println(dfSchema)
+
+  //ORC files
+  spark.read.format("orc")
+    .load("src/resources/flight-data/orc/2010-summary.orc")
+    .show(5)
+
+
+  df.write
+    .format("orc")
+      .mode("overwrite")
+      .save("src/resources/tmp/my-orc-file.orc")
 
 }

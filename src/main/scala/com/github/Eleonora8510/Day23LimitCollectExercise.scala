@@ -13,27 +13,33 @@ object Day23LimitCollectExercise extends App {
 
   df.show(5)
   df.printSchema()
+  df.createOrReplaceTempView("dfTable2011")
 
   //TODO get all purchases that have been made from Finland
   df.where("Country = 'Finland'").show()
 
   //TODO sort by Unit Price and LIMIT 20
-  df.sort("UnitPrice")
+  df
     .where("Country = 'Finland'")
+    .sort("UnitPrice")
     .show() //show by default shows 20
 
   //TODO collect results into an Array of Rows
   //print these 20 Rows
-  val arrayOfRows = df.sort("UnitPrice")
+  val arrayOfRows = df
     .where("Country = 'Finland'")
+    .sort("UnitPrice")
     .limit(20)
     .collect()
 
   arrayOfRows.foreach(println)
+  println()
 
+  val finland2011 = spark.sql("SELECT * FROM dfTable2011 " +
+    "WHERE Country = 'Finland' " +
+  "ORDER BY UnitPrice DESC " +
+    "LIMIT 20").collect()
 
-
-
-  //You can use either SQL or Spark or mix of syntax
+  finland2011.take(5).foreach(println)
 
 }

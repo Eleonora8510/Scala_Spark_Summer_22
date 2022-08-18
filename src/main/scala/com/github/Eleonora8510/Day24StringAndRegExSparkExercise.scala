@@ -1,6 +1,6 @@
 package com.github.Eleonora8510
 
-import com.github.Eleonora8510.SparkUtil.{getSpark, readCSVWithView}
+import com.github.Eleonora8510.SparkUtil.{getSpark, readDataWithView}
 import org.apache.spark.sql.functions.{col, count, expr, initcap, length, lpad, regexp_replace, rpad}
 
 object Day24StringAndRegExSparkExercise extends App {
@@ -18,15 +18,30 @@ object Day24StringAndRegExSparkExercise extends App {
 
   val filePath = "src/resources/retail-data/by-day/2011-03-01.csv"
 
-  val df = readCSVWithView(spark, filePath)
+  val df = readDataWithView(spark, filePath)
 
   val simpleMaterials = Seq("ceramic", "ivory", "metal", "porcelain", "wood")
   val regexString = simpleMaterials.map(_.toUpperCase()).mkString("|")
 
   df.select(
     initcap(col("Description")).as("Capitalized Description"),
-    lpad(rpad(col("Country"), len = 30 - expr("Country").toString().length, "_"), 30, "_").as("Padded country"),
+    expr("lpad(rpad(Country, 15 + int((char_length(Country))/2), '_'), 30, '_') as ___Country___"),
     regexp_replace(col("Description"), regexString, "material").alias("material_clean")
   ).show(10, false)
+
+  spark.sql(
+    """
+      |SELECT
+      |Description,
+      |Country,
+      |lpad(Country, 22, '_'),
+      |rpad(Country, 22, '_'),
+      |lpad(rpad(Country, 15 + (char_length(Country))/2, '_'), 30, '_') as ___Country___
+      |FROM dfTable
+      |""".stripMargin)
+    .sample(false, fraction = 0.3)
+    .show(20, false)
+
+
 
 }

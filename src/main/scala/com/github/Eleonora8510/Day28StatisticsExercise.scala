@@ -68,12 +68,34 @@ object Day28StatisticsExercise extends App {
 
   df.agg(collect_set("Country")).collect().foreach(println)
 
-//  val countries = spark.sql(
-//    """
-//      |SELECT DISTINCT(Country)
-//      |FROM dfTable
-//      |""".stripMargin
-//  )
+  val countries = df.agg(collect_set("Country")).collect()
 
+ // val countryStrings = countries.map(_.getString(0)))
+  //println(countryStrings.mkString(","))
+  println(countries.mkString)
+  println("Printing row by row:")
+
+  for (row<-countries){
+    println(row)
+  }
+  ///turns out we only have a single row , so we would split it using regex
+
+
+    val distinctCountries = spark.sql(
+    """
+      |SELECT DISTINCT(Country)
+      |FROM dfTable
+      |""".stripMargin
+  )
+
+  distinctCountries.show()
+  val countryStringsRows = distinctCountries.collect()
+  val countryStrings = countryStringsRows.map(_.getString(0))
+  println(countryStrings.mkString(","))
+
+  //this is how we could get out sequence saved in a single cell of dataframe
+  //check chapter 6 on complex types
+  val countrySeq: Seq[String] = countries.head.getSeq(0) //first column for our first row
+  println(countrySeq.mkString("[",",","]"))
 
 }

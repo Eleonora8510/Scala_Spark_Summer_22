@@ -1,7 +1,8 @@
 package com.github.Eleonora8510
 
 import com.github.Eleonora8510.SparkUtil.{getSpark, readDataWithView}
-import org.apache.spark.sql.functions.{approx_count_distinct, col, count, countDistinct, expr, udf}
+import com.github.Eleonora8510.Util.myRound
+import org.apache.spark.sql.functions.{approx_count_distinct, col, count, countDistinct, expr, round, udf}
 
 object Day27ExerciseUdf extends App {
   println("User-defined functions and some aggregation functions")
@@ -17,14 +18,16 @@ object Day27ExerciseUdf extends App {
 
   //You probably want Double incoming and Double also as a return
 
+  //def temperatureFtoC(t : Double): Double = myRound((t - 32) * 5 / 9, 2)
   def temperatureFtoC(t : Double): Double = (t - 32) * 5 / 9
 
   val temperaturesDF = spark.range(-40, 121).toDF("temperatureF")
   val tempFtoC = udf(temperatureFtoC(_:Double):Double)
 
   temperaturesDF
-    .withColumn("temperatureC", tempFtoC(col("temperatureF")))
+    .withColumn("temperatureC", round(tempFtoC(col("temperatureF"))))
     .where(expr("temperatureF >= 90 AND temperatureF <= 110"))
+    //.where(col("temperatureF") >= 90 && col("temperatureF") <= 110)
     .show(21)
 
   // In SQL
@@ -34,7 +37,7 @@ object Day27ExerciseUdf extends App {
   spark.sql(
     """
       |SELECT *,
-      |tempFtoC_udf(temperatureF) as temperatureC
+      |round(tempFtoC_udf(temperatureF)) as temperatureC
       |FROM tempDfTable
       |WHERE temperatureF >=90 AND temperatureF <=110
       |""".stripMargin

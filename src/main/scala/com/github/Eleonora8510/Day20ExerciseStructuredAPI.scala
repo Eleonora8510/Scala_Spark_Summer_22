@@ -26,5 +26,6 @@ object Day20ExerciseStructuredAPI extends App {
   val range100To3100 = spark.range(100, 3101).toDF.collect()
   range100To3100.slice(2996, 3001).foreach(println)
 
+
 }
 
