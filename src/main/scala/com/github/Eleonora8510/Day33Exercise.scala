@@ -70,10 +70,12 @@ object Day33Exercise extends App {
 
   val ss = new StandardScaler()
     .setInputCol("features")
-    .setOutputCol("output")
+    .setOutputCol("scaledFeatures")
+    .setWithStd(true)
+    .setWithMean(true )
 
   val dfScaled = ss.fit(dfAssembled).transform(dfAssembled)
-    dfScaled.show(5, false)
+  dfScaled.show(5, false)
 
   //TODO create a dataframe with all these columns - save to alice.csv file with all columns
 
@@ -87,7 +89,7 @@ object Day33Exercise extends App {
       |textLen,
       |wordCount,
       |CAST(features AS String),
-      |CAST(output AS String)
+      |CAST(scaledFeatures AS String)
       |FROM dfTable
       |""".stripMargin
   )
