@@ -6,7 +6,9 @@ import org.apache.spark.sql.functions._
 object StockAnalysis extends App{
   val spark = getSpark("StockMarketAnalysis")
 
-  val filePath = "src/resources/final_project/stock_prices_.csv"
+  val defaultSrc = "src/resources/final_project/stock_prices_.csv"
+  val filePath = if (args.length >= 1) args(0) else defaultSrc
+  println(s"READING FILE FROM $filePath")
 
   //Load up stock_prices.csv as a DataFrame
   val df = spark.read.format("csv")
