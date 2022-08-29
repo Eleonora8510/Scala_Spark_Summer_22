@@ -19,6 +19,17 @@ object SparkUtil {
     sparkSession
   }
 
+  /**
+   * @param spark SparkSession
+   * @param filePath location of the source file
+   * @param source specifies the file format
+   * @param viewName creates a local temporary view using the given name
+   * @param header specifies if the first file row is a header
+   * @param inferSchema specifies whether Spark should infer column types when reading the file
+   * @param printSchema specifies whether to print the schema
+   * @param cacheOn determines if to cache the data
+   * @return DataFrame
+   */
   def readDataWithView(spark: SparkSession,
                        filePath: String,
                        source: String = "csv",
