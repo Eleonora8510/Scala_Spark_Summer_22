@@ -67,7 +67,6 @@ object Regression_SMA_withoutSS extends App {
 
   //calculating simple moving average for 10 previous days
   var df_SMA = df_withPreviousPrices
-    //.select("b_1", "b_2", "b_3")
     .withColumn("SMA_10",
       (col("b_1") + col("b_2") + col("b_3") +
         col("b_4") + col("b_5") + col("b_6") +
@@ -84,8 +83,6 @@ object Regression_SMA_withoutSS extends App {
 
   //using One Hot Encoder for categorical value tickerInd
   val ohe = new OneHotEncoder().setInputCol("tickerInd").setOutputCol("ticker_encoded")
-
-
 
   val stages = Array(tickerIdx, ohe)
   val pipeline = new Pipeline().setStages(stages)
@@ -107,9 +104,6 @@ object Regression_SMA_withoutSS extends App {
 
   // building linear regression
   val lr = new LinearRegression()
-    //.setMaxIter(10)
-    .setRegParam(0.3)
-    .setElasticNetParam(0.8)
 
   println(lr.explainParams())
 
