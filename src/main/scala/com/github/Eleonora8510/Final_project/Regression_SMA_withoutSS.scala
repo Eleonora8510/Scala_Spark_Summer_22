@@ -36,7 +36,7 @@ object Regression_SMA_withoutSS extends App {
 
   //vectorizing potential features in order to calculate correlation matrix
   val va = new VectorAssembler()
-    .setInputCols(Array("open","high", "low", "close", "volume"))
+    .setInputCols(Array("open","high", "low", "volume"))
     .setOutputCol("vectorized features")
   val dfVectorized = va.transform(df)
 
